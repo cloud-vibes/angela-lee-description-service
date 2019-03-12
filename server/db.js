@@ -1,17 +1,23 @@
-const mysql = require('mysql');
-const credentials = require('../credentials');
+const pg = require('pg');
+const creds = require('../creds.js');
 
-const connection = mysql.createConnection({
-  host: credentials.host,
-  user: credentials.username,
-  password: credentials.password,
-  database: credentials.database,
+const connection = `postgres://${creds.user}:${creds.password}@${creds.host}:${creds.port}/songs`;
+
+const client = new pg.Client(connection);
+
+client.connect((err) => {
+  if (err) {
+    return console.error('Could not connect to postgres ', err);
+  }
+  console.log('Connected!');
 });
 
-connection.connect();
+/****************************************************
+  Song Description CRUDs
+****************************************************/
 
-const artistWidget = (cb) => {
-  connection.query('SELECT * FROM artist_info', (err, results) => {
+const songGETDescription = (songID, cb) => {
+  client.query(`SELECT * FROM song_description WHERE id = ${songID}`, (err, results) => {
     if (err) {
       cb(err);
       return;
@@ -20,8 +26,8 @@ const artistWidget = (cb) => {
   });
 };
 
-const songDescription = (songID, cb) => {
-  connection.query(`SELECT * FROM song_description WHERE id = ${songID}`, (err, results) => {
+const songPOSTDescription = (songID, cb) => {
+  client.query(`INSERT INTO song_description (description_text) VALUES (newDescription)`, (err, results) => {
     if (err) {
       cb(err);
       return;
@@ -30,6 +36,29 @@ const songDescription = (songID, cb) => {
   });
 };
 
+const songPUTDescription = (songID, cb) => {
+  client.query(`UPDATE song_description SET column_2 = newDescription WHERE id = ${songID}`, (err, results) => {
+    if (err) {
+      cb(err);
+      return;
+    }
+    cb(results);
+  });
+};
 
-module.exports.artistWidget = artistWidget;
-module.exports.songDescription = songDescription;
+const songDELETEDescription = (songID, cb) => {
+  client.query(`DELETE FROM song_description WHERE id = ${songID}`, (err, results) => {
+    if (err) {
+      cb(err);
+      return;
+    }
+    cb(results);
+  });
+};
+
+module.exports = {
+  songGETDescription,
+  songPOSTDescription,
+  songPUTDescription,
+  songDELETEDescription,
+};

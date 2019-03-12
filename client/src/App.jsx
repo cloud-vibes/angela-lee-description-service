@@ -2,6 +2,8 @@ import React from 'react';
 import ArtistWidget from './components/ArtistWidget';
 import SongDetailWidget from './components/songDetailWidget';
 
+import artistData from './data/artistData.js'
+
 import Styled from './appContainerStyle';
 
 class App extends React.Component {
@@ -10,7 +12,7 @@ class App extends React.Component {
 
     this.state = {
       detailsTruncated: true,
-      artistData: null,
+      artistData: artistData,
       songData: null,
       artistIdx: null,
     };
@@ -18,15 +20,8 @@ class App extends React.Component {
   }
 
   componentDidMount() {
-    fetch('http://ponydescription.us-west-1.elasticbeanstalk.com/artistinfo').then(response => response.json())
-      .then((data) => {
-        this.setState({
-          artistData: data,
-          artistIdx: Math.floor(Math.random() * data.length),
-        });
-        return data;
-      });
-    fetch(`http://ponydescription.us-west-1.elasticbeanstalk.com${window.location.pathname}songinfo/`).then(response => response.json())
+    fetch(`/api/description${window.location.pathname}`)
+      .then(response => response.json())
       .then((data) => {
         this.setState({
           songData: data,
@@ -42,20 +37,18 @@ class App extends React.Component {
     });
   }
 
-
   render() {
     const {
       artistData, artistIdx, songData, detailsTruncated,
     } = this.state;
 
     let songNumber = window.location.pathname.split('/')[2];
-    if(songNumber === '' || !songNumber ) {
+    if (songNumber === '' || !songNumber) {
       songNumber = 4;
-    } 
+    }
     return (
       <Styled>
-
-        <ArtistWidget artistData={artistData && artistData[songNumber - 1]} />
+        <ArtistWidget artistData={artistData && artistData[0]} />
         <SongDetailWidget artistData={artistData} songData={songData && songData[0]} truncated={detailsTruncated} toggleTruncate={this.toggleTruncate} />
       </Styled>
     );
