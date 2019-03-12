@@ -66,13 +66,13 @@ function SongDetailWidget({
     descriptionArray.forEach((word) => {
       if (word[0] === '@') {
         const artistName = word.substring(1);
-        let artistObject = null;
-        for (let i = 0; i < 100; i++) {
-          if (artistName === artistData[i].artist_name) {
-            artistObject = artistData[i];
-            break;
-          }
-        }
+        let artistObject = artistData[0];
+        // for (let i = 0; i < 100; i++) {
+        //   if (artistName === artistData[i].artist_name) {
+        //     artistObject = artistData[i];
+        //     break;
+        //   }
+        // }
         const followers = artistObject.no_of_followers;
 
         parsedDescription.push(<span className="songDescriptionAt tooltip">
@@ -95,7 +95,8 @@ function SongDetailWidget({
           </span>
           {' '}
         </span>);
-      } else if (regexp.test(word)) {
+      } else 
+      if (regexp.test(word)) {
         parsedDescription.push(<span className="songDescriptionURL">
           {`${word} `}
           {' '}
