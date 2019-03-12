@@ -1,0 +1,11 @@
+node_modules
+package-lock.json
+client/dist/bundle.js
+creds.js
+songDescriptionSeed.js
+song.csv
+newrelic.js
+newrelic_agent.log
+artillery.yml
+test_function.js
+.DS_Store
