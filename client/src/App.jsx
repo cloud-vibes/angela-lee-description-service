@@ -20,7 +20,7 @@ class App extends React.Component {
   }
 
   componentDidMount() {
-    fetch(`http://localhost:3000/api/description${window.location.pathname}`)
+    fetch(`/api/description${window.location.pathname}`)
       .then(response => response.json())
       .then((data) => {
         this.setState({
