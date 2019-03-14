@@ -13,8 +13,6 @@ app.use(bodyParser.json());
 app.use(cors());
 
 app.use(express.static(path.join(__dirname, '../client/dist')));
-app.use('/song', express.static(path.join(__dirname, '../client/dist')));
-app.use('/song/:id', express.static(path.join(__dirname, '../client/dist')));
 
 /****************************************************
   Song Description APIs
@@ -50,5 +48,9 @@ app.delete('/api/description/song/:id', (req, res) => {
     res.send(data);
   });
 });
+
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, '../client/dist/index.html'))
+})
 
 app.listen(port, () => console.log(`LISTENING ON PORT ${port}`));
